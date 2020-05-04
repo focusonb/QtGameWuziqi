@@ -7,8 +7,11 @@
 //#include "struct_iswin.h"
 //#include <utility>
 using namespace std;
+//struct cmp;
+//extern struct  Threadarg_iswin;
 extern class GameWidget;
-extern class QMessageBox;
+ class QMessageBox;
+
 struct cmp
 {
 public:
@@ -19,7 +22,7 @@ public:
 			{
 				return true;
 			}
-			else if (a.y() >b.y())
+			else if (a.y() > b.y())
 			{
 				return false;
 			}
@@ -43,6 +46,7 @@ public:
 
 
 };
+
 struct Threadarg_iswin
 {
 	QPointF* point_chess;
@@ -50,14 +54,16 @@ struct Threadarg_iswin
 	qreal* chess_width;
 	bool* myturn;
 	bool* gamegoingon;
-	HANDLE* semaone;
-	HANDLE* sematwo;
-	//GameWidget* ptrgamewidget;
+	QSemaphore* semaone;
+	QSemaphore* sematwo;
+	GameWidget* ptrgamewidget;
 	QMessageBox* messagebox;
 };
+
+
 void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess, map<QPointF, int, cmp>*&ptrchesses);
 void drawachess(bool&myturn, QPointF& point_chess, QGraphicsScene*scene, qreal& chess_width, map<QPointF, int, cmp>*&ptrchesses,
-	bool& gamegoingon, HANDLE* sematwo,HANDLE* semaone);
+	bool& gamegoingon, QSemaphore* sematwo, QSemaphore* semaone);
 QRectF  qpointtoqrectf(QPointF& point_chess, qreal& chess_width);
 void pointstd(QPointF& point_chess,qreal& chess_width);
 bool is_outrange(QPointF& point_chess, qreal& chess_width);

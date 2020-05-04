@@ -6,7 +6,7 @@ QtGame::QtGame(QWidget *parent)
 {
 	ui.setupUi(this);
 }
-QtGame::QtGame(HANDLE& semaone, HANDLE& sematwo)
+QtGame::QtGame(QSemaphore& semaone, QSemaphore& sematwo)
 	: QMainWindow()
 	, gamewidget(new GameWidget(semaone,sematwo))
 {

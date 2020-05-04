@@ -2,20 +2,10 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_QtGame.h"
-//#include "ui_WangYiYun.h"
 #include "GameWidget.h"
 #include "qprocess.h"
+//#include "struct_iswin.h"
 
-//class GameWindow :public QMainWindow
-//{
-//	Q_OBJECT
-//public slots:
-//	void comeback()
-//	{
-//		this->hide();
-//	}
-//
-//};
 
 class QtGame : public QMainWindow
 {
@@ -23,7 +13,7 @@ class QtGame : public QMainWindow
 
 public:
 	QtGame(QWidget *parent = Q_NULLPTR);
-	QtGame(HANDLE& semaone,HANDLE& sematwo);
+	QtGame(QSemaphore& semaone, QSemaphore& sematwo);
 	GameWidget*& getgamewidget() { return gamewidget; }
 
 private:

@@ -8,9 +8,11 @@ GameWidget::GameWidget(QMainWindow*parent):chesses(new map<QPointF, int, cmp>())
 	ui.graphicsView->setScene(scene);
 	//map<QPointF, int, cmp>* ptrchesse;
 	makeBoard(ui.graphicsView,scene, width_chess, height_chess, chesses);
+	iswinThread = new IswinThread(getdata());
+	iswinThread->start();
 	connect(this, &GameWidget::gameover, this, &GameWidget::gameover_message);
 }
-GameWidget::GameWidget(HANDLE& s, HANDLE& sematwo) :chesses(new map<QPointF, int, cmp>()),
+GameWidget::GameWidget(QSemaphore& s, QSemaphore& sematwo) :chesses(new map<QPointF, int, cmp>()),
 sematwo (&sematwo)
 {
 	ui.setupUi(this);
@@ -19,6 +21,9 @@ sematwo (&sematwo)
 	//map<QPointF, int, cmp>* ptrchesse;
 	makeBoard(ui.graphicsView, scene, width_chess, height_chess, chesses);
 	semaone = &s;
+	iswinThread = new IswinThread(getdata());
+	iswinThread->start();
+	connect(iswinThread, SIGNAL(gameover()), this, SLOT(gameover_message()));
 	connect(this, &GameWidget::gameover, this, &GameWidget::gameover_message);
 }
 void GameWidget::gameclose()
@@ -29,10 +34,6 @@ void GameWidget::gameclose()
 }
 void GameWidget::mousePressEvent(QMouseEvent*e)
 {
-	//if (WaitForSingleObject(*semaone, 0)== 0x00000080L)
-	//{
-	//	return;
-	//}
 	//if (gamegoingon == false)
 	//{
 	//	QMessageBox message(QMessageBox::Warning, "Information", "GAME OVER", QMessageBox::Yes, NULL);
@@ -54,10 +55,17 @@ Threadarg_iswin* GameWidget::getdata()
 	arg_iswin.chess_width = &width_chess;
 	arg_iswin.myturn = &myturn;
 	arg_iswin.gamegoingon = &gamegoingon;
+	arg_iswin.sematwo = sematwo;
+	arg_iswin.semaone = semaone;
+	arg_iswin.ptrgamewidget = this;
 	return &arg_iswin;
  }
 void GameWidget::gameover_message()
 {
 	QMessageBox message(QMessageBox::Warning, "Information", "YOU WIN!", QMessageBox::Yes, NULL);
 	message.exec();
+}
+GameWidget::~GameWidget()
+{
+	iswinThread->terminate();
 }

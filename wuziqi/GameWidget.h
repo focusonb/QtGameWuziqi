@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <map>
 #include "myfunction.h"
+#include "IswinThread.h"
 
 using namespace std;
 class GameWidget :
@@ -14,7 +15,8 @@ class GameWidget :
 		
 public:
 	GameWidget(QMainWindow*parent=NULL);
-	GameWidget(HANDLE& semaone, HANDLE& sematwo);
+	GameWidget(QSemaphore& semaone, QSemaphore& sematwo);
+	~GameWidget();
 signals:
 	void gameover();
 public slots:
@@ -37,8 +39,10 @@ private:
 	bool gamegoingon = true;
 	Threadarg_iswin arg_iswin;
 	QPointF achess;
-	HANDLE* sematwo;
-	HANDLE* semaone;
+	QSemaphore* sematwo;
+	QSemaphore* semaone;
+	IswinThread* iswinThread;
+	GameWidget* ptrgamewidget;
 };
 
 

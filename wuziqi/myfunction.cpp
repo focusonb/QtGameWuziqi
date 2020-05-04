@@ -5,7 +5,6 @@
 //#include <QGraphicsScene>
 //#include "GameWidget.h"
 extern class GameWidget;
-
 void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess ,map<QPointF, int, cmp>*&ptrchesses)
 {
 	QBrush greenBrush(Qt::green);
@@ -56,9 +55,10 @@ QRectF  qpointtoqrectf(QPointF& point_chess,qreal& chess_width)
 	return QRectF(topLeft, bottomRight);
 }
 void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& chess_width,map<QPointF, int,
-	cmp>*&ptrchesses, bool& gamegoingon, HANDLE* sematwo, HANDLE* semaone)
+	cmp>*&ptrchesses, bool& gamegoingon, QSemaphore* sematwo, QSemaphore* semaone)
 {
 	pointstd(point_chess, chess_width);
+
 	if (is_outrange(point_chess, chess_width))
 	{
 		return;
@@ -72,6 +72,11 @@ void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& c
 	{
 		QPen pen(Qt::black);
 		QBrush brush(Qt::black);
+		if (semaone->tryAcquire(1) == false)
+		{
+			return;
+		}
+
 		scene->addEllipse(rect, pen, brush);
 		ptrchesses->at(point_chess) = 1;
 		//if (is_win(point_chess, ptrchesses, chess_width, myturn,gamegoingon))
@@ -79,8 +84,8 @@ void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& c
 		//	QMessageBox message(QMessageBox::Warning, "Information", "YOU WIN!", QMessageBox::Yes, NULL);
 		//	message.exec();
 		//}
-		ReleaseSemaphore(*sematwo, 1, NULL);
-		
+		//QReleaseSemaphore(*sematwo, 1, NULL);
+		sematwo->release();
 		//scene->addEllipse(QRectF(QPointF(-18.75, -18.75), QPointF(18.75, 18.75)), pen, brush);
 		//scene->addEllipse(QRectF(QPointF(-chess_width /2, chess_width / 2), QPointF(chess_width / 2, -chess_width / 2)), pen, brush);
 	}
@@ -88,6 +93,11 @@ void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& c
 	{
 		QPen pen(Qt::white);
 		QBrush brush(Qt::white);
+		if (semaone->tryAcquire(1) == false)
+		{
+			return;
+		}
+
 		scene->addEllipse(rect, pen, brush);
 		ptrchesses->at(point_chess) = 2;
 		//if (is_win(point_chess, ptrchesses, chess_width, myturn,gamegoingon))
@@ -95,16 +105,11 @@ void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& c
 		//	QMessageBox message(QMessageBox::Warning, "Information", "YOU WIN!", QMessageBox::Yes, NULL);
 		//	message.exec();
 		//}
-		ReleaseSemaphore(*sematwo, 1, NULL);
+		sematwo->release();
 		//yturn = true;
 
 	}
-	WaitForSingleObject(*semaone, INFINITE);
-	if (gamegoingon == false)
-	{
-		QMessageBox message(QMessageBox::Warning, "Information", "GAME OVER", QMessageBox::Yes, NULL);
-		message.exec();
-	}
+
 	
 	
 	
@@ -352,33 +357,34 @@ bool Is_obl_win_a(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qrea
 	else
 		return false;
 }
-unsigned WINAPI iswin_func(void*arg)
-{
-	//GameWidget* p = ((*((Threadarg_iswin*)arg)).ptrgamewidget);
-	while (1)
-	{
-		WaitForSingleObject(*((*((Threadarg_iswin*)arg)).sematwo), INFINITE);
-		if (
-			is_win(*((*((Threadarg_iswin*)arg)).point_chess),
-				*((*((Threadarg_iswin*)arg)).ptrchesses),
-				*((*((Threadarg_iswin*)arg)).chess_width),
-				*((*((Threadarg_iswin*)arg)).myturn),
-				*((*((Threadarg_iswin*)arg)).gamegoingon)
-			))
-		{
-			*((*((Threadarg_iswin*)arg)).gamegoingon) = false;
-		}
-		if ((*((*((Threadarg_iswin*)arg)).myturn)) == true)
-		{
-			(*((*((Threadarg_iswin*)arg)).myturn) )= false;
-		}
-		else
-		{
-			(*((*((Threadarg_iswin*)arg)).myturn))= true;
-		}
-		ReleaseSemaphore(*((*((Threadarg_iswin*)arg)).semaone), 1, NULL);
-	}
-
-
-	return 0;
-}
+//unsigned WINAPI iswin_func(void*arg)
+//{
+//	//GameWidget* p = ((*((Threadarg_iswin*)arg)).ptrgamewidget);
+//	while (1)
+//	{
+//		WaitForSingleObject(*((*((Threadarg_iswin*)arg)).sematwo), INFINITE);
+//		if (
+//			is_win(*((*((Threadarg_iswin*)arg)).point_chess),
+//				*((*((Threadarg_iswin*)arg)).ptrchesses),
+//				*((*((Threadarg_iswin*)arg)).chess_width),
+//				*((*((Threadarg_iswin*)arg)).myturn),
+//				*((*((Threadarg_iswin*)arg)).gamegoingon)
+//			))
+//		{
+//			*((*((Threadarg_iswin*)arg)).gamegoingon) = false;
+//			//emit (*((*((Threadarg_iswin*)arg)).ptrgamewidget))->gameover();
+//		}
+//		if ((*((*((Threadarg_iswin*)arg)).myturn)) == true)
+//		{
+//			(*((*((Threadarg_iswin*)arg)).myturn) )= false;
+//		}
+//		else
+//		{
+//			(*((*((Threadarg_iswin*)arg)).myturn))= true;
+//		}
+//		ReleaseSemaphore(*((*((Threadarg_iswin*)arg)).semaone), 1, NULL);
+//	}
+//
+//
+//	return 0;
+//}
