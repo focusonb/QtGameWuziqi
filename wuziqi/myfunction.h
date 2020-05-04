@@ -54,10 +54,14 @@ struct Threadarg_iswin
 	qreal* chess_width;
 	bool* myturn;
 	bool* gamegoingon;
+	bool* mypart;
 	QSemaphore* semaone;
 	QSemaphore* sematwo;
+	QSemaphore* semathree;
 	GameWidget* ptrgamewidget;
 	QMessageBox* messagebox;
+	bool* is_matched;
+	//QGraphicsScene** scene;
 };
 
 
@@ -78,3 +82,4 @@ bool Is_obl_win(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal&
 bool check_obl_a(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& chess_width, bool&myturn);
 bool Is_obl_win_a(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& chess_width, int i);
 unsigned WINAPI iswin_func(void*arg);
+void split_a(string&s,QPointF&chesspoint);

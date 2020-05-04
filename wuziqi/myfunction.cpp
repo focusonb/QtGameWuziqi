@@ -2,6 +2,7 @@
 
 #include "myfunction.h"
 #include <QMessageBox>
+#include <stdlib.h>
 //#include <QGraphicsScene>
 //#include "GameWidget.h"
 extern class GameWidget;
@@ -357,34 +358,14 @@ bool Is_obl_win_a(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qrea
 	else
 		return false;
 }
-//unsigned WINAPI iswin_func(void*arg)
-//{
-//	//GameWidget* p = ((*((Threadarg_iswin*)arg)).ptrgamewidget);
-//	while (1)
-//	{
-//		WaitForSingleObject(*((*((Threadarg_iswin*)arg)).sematwo), INFINITE);
-//		if (
-//			is_win(*((*((Threadarg_iswin*)arg)).point_chess),
-//				*((*((Threadarg_iswin*)arg)).ptrchesses),
-//				*((*((Threadarg_iswin*)arg)).chess_width),
-//				*((*((Threadarg_iswin*)arg)).myturn),
-//				*((*((Threadarg_iswin*)arg)).gamegoingon)
-//			))
-//		{
-//			*((*((Threadarg_iswin*)arg)).gamegoingon) = false;
-//			//emit (*((*((Threadarg_iswin*)arg)).ptrgamewidget))->gameover();
-//		}
-//		if ((*((*((Threadarg_iswin*)arg)).myturn)) == true)
-//		{
-//			(*((*((Threadarg_iswin*)arg)).myturn) )= false;
-//		}
-//		else
-//		{
-//			(*((*((Threadarg_iswin*)arg)).myturn))= true;
-//		}
-//		ReleaseSemaphore(*((*((Threadarg_iswin*)arg)).semaone), 1, NULL);
-//	}
-//
-//
-//	return 0;
-//}
+void split_a(string&s, QPointF&chesspoint)
+{
+	size_t pos = s.find('a');
+    
+	string xstr(s, 0, pos);
+	string ystr(s, pos + 1);
+	qreal xq = atof(xstr.c_str());
+	qreal yq = atof(ystr.c_str());
+	chesspoint.setX(xq);
+	chesspoint.setY(yq);
+}

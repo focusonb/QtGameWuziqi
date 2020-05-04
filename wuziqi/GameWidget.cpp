@@ -1,6 +1,9 @@
+#include "SocketThread.h"
 #include "GameWidget.h"
 #include "myfunction.h"
 #include <qmessagebox.h>
+
+extern void sendachesss(string& s);
 GameWidget::GameWidget(QMainWindow*parent):chesses(new map<QPointF, int, cmp>())
 {
 	ui.setupUi(this);
@@ -12,8 +15,8 @@ GameWidget::GameWidget(QMainWindow*parent):chesses(new map<QPointF, int, cmp>())
 	iswinThread->start();
 	connect(this, &GameWidget::gameover, this, &GameWidget::gameover_message);
 }
-GameWidget::GameWidget(QSemaphore& s, QSemaphore& sematwo) :chesses(new map<QPointF, int, cmp>()),
-sematwo (&sematwo)
+GameWidget::GameWidget(QSemaphore& s, QSemaphore& sematwo, QSemaphore& semathree) :chesses(new map<QPointF, int, cmp>()),
+sematwo (&sematwo),semathree(&semathree)
 {
 	ui.setupUi(this);
 	scene = new QGraphicsScene(this);
@@ -23,8 +26,18 @@ sematwo (&sematwo)
 	semaone = &s;
 	iswinThread = new IswinThread(getdata());
 	iswinThread->start();
+	socketThread = new SocketThread(getdata());
+	socketThread->start();
 	connect(iswinThread, SIGNAL(gameover()), this, SLOT(gameover_message()));
 	connect(this, &GameWidget::gameover, this, &GameWidget::gameover_message);
+	connect(
+		socketThread,
+		SIGNAL(received()),
+		this,
+		SLOT(draw())
+	);
+	connect(this, SIGNAL(getaplayer()), socketThread, SLOT(gamestart()));
+	connect(socketThread, SIGNAL(successmatch()), this, SLOT(match_message()));
 }
 void GameWidget::gameclose()
 {
@@ -34,18 +47,25 @@ void GameWidget::gameclose()
 }
 void GameWidget::mousePressEvent(QMouseEvent*e)
 {
-	//if (gamegoingon == false)
-	//{
-	//	QMessageBox message(QMessageBox::Warning, "Information", "GAME OVER", QMessageBox::Yes, NULL);
- //       message.exec();
-	//	return;
-	//}
+	if (is_matched == false)
+	{
+		QMessageBox message(QMessageBox::Warning, "Information", "Waiting for your opponent", QMessageBox::Yes, NULL);
+		message.exec();
+		return;
+	}
+	if (myturn != mypart)
+	{
+		QMessageBox message(QMessageBox::Warning, "Information", "Its not your turn", QMessageBox::Yes, NULL);
+		message.exec();
+		return;
+	}
 	QPoint mousePos = e->pos();
 	QPoint pointcentre = ui.centralwidget->mapFromParent(mousePos);
 	QPoint pointwidget = ui.widget->mapFromParent(pointcentre);
 	QPoint pointview = ui.graphicsView->mapFromParent(pointwidget);
 	achess = ui.graphicsView->mapToScene(pointview);
-	//QPointF pointScene = ui.graphicsView->mapToScene(mousePos);
+	string message_toopponent(std::to_string(achess.rx()) + 'a' + std::to_string(achess.ry()));
+	socketThread->sendachesss(message_toopponent,socketThread->getsocket());
 	drawachess(myturn, achess,scene,width_chess, chesses,gamegoingon,sematwo,semaone);
 }
 Threadarg_iswin* GameWidget::getdata()
@@ -58,6 +78,9 @@ Threadarg_iswin* GameWidget::getdata()
 	arg_iswin.sematwo = sematwo;
 	arg_iswin.semaone = semaone;
 	arg_iswin.ptrgamewidget = this;
+	arg_iswin.mypart = &mypart;
+	arg_iswin.is_matched = &is_matched;
+	arg_iswin.semathree = semathree;
 	return &arg_iswin;
  }
 void GameWidget::gameover_message()
@@ -68,4 +91,25 @@ void GameWidget::gameover_message()
 GameWidget::~GameWidget()
 {
 	iswinThread->terminate();
+}
+//void  GameWidget::draw(bool&myturn, QPointF& point_chess, QGraphicsScene*scene, qreal& chess_width, map<QPointF, int, cmp>*&ptrchesses,
+//	bool& gamegoingon, QSemaphore* sematwo, QSemaphore* semaone)
+//{
+//	drawachess(myturn, point_chess, scene, chess_width, ptrchesses, gamegoingon, sematwo, semaone);		
+//
+//}
+void GameWidget::draw()
+{
+	
+	drawachess(myturn, achess, scene, width_chess, chesses, gamegoingon, sematwo, semaone);
+	return;
+}
+void GameWidget::matchplayer()
+{
+	emit getaplayer();
+}
+void GameWidget::match_message()
+{
+	QMessageBox message(QMessageBox::Warning, "Information", "matched one player successfully", QMessageBox::Yes, NULL);
+	message.exec();
 }

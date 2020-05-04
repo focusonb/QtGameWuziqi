@@ -88,7 +88,7 @@
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="text">
-          <string>PushButton</string>
+          <string>MatchGame</string>
          </property>
         </widget>
        </item>
@@ -143,11 +143,11 @@
    <sender>pushButton</sender>
    <signal>pressed()</signal>
    <receiver>MainWindow</receiver>
-   <slot>gameclose()</slot>
+   <slot>matchplayer()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>61</x>
-     <y>262</y>
+     <x>676</x>
+     <y>340</y>
     </hint>
     <hint type="destinationlabel">
      <x>255</x>
@@ -158,5 +158,6 @@
  </connections>
  <slots>
   <slot>gameclose()</slot>
+  <slot>matchplayer()</slot>
  </slots>
 </ui>

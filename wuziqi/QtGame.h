@@ -13,7 +13,7 @@ class QtGame : public QMainWindow
 
 public:
 	QtGame(QWidget *parent = Q_NULLPTR);
-	QtGame(QSemaphore& semaone, QSemaphore& sematwo);
+	QtGame(QSemaphore& semaone, QSemaphore& sematwo, QSemaphore& semathree);
 	GameWidget*& getgamewidget() { return gamewidget; }
 
 private:
