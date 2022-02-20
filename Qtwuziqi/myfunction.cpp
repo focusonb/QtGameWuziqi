@@ -5,7 +5,7 @@
 #include <stdlib.h>
 //#include <QGraphicsScene>
 //#include "GameWidget.h"
-extern class GameWidget;
+class GameWidget;
 void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess ,map<QPointF, int, cmp>*&ptrchesses)
 {
 	QBrush greenBrush(Qt::green);
@@ -136,7 +136,7 @@ void pointstd(QPointF& point_chess, qreal& chess_width)
 }
 
 
-bool is_outrange(QPointF& point_chess, qreal& chess_width)
+bool is_outrange(QPointF point_chess, qreal chess_width)
 {
 	if (
 		((point_chess.rx() <= chess_width * 7) &&
@@ -180,10 +180,9 @@ bool check_row(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& 
 	{
 		return Is_row_win(point_chess, ptrchesses, chess_width, 1);
 	}
-	if (myturn == false)
-	{
-		return Is_row_win(point_chess, ptrchesses, chess_width, 2);
-	}
+
+	return Is_row_win(point_chess, ptrchesses, chess_width, 2);
+
 }
 bool Is_row_win(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& chess_width, int i)
 {
@@ -225,10 +224,9 @@ bool check_col(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& 
 	{
 		return Is_col_win(point_chess, ptrchesses, chess_width, 1);
 	}
-	if (myturn == false)
-	{
-		return Is_col_win(point_chess, ptrchesses, chess_width, 2);
-	}
+
+	return Is_col_win(point_chess, ptrchesses, chess_width, 2);
+
 }
 bool Is_col_win(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& chess_width, int i)
 {
@@ -271,10 +269,8 @@ bool check_obl(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& 
 	{
 		return Is_obl_win(point_chess, ptrchesses, chess_width, 1);
 	}
-	if (myturn == false)
-	{
-		return Is_obl_win(point_chess, ptrchesses, chess_width, 2);
-	}
+
+	return Is_obl_win(point_chess, ptrchesses, chess_width, 2);
 }
 bool Is_obl_win(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& chess_width, int i)
 {
@@ -318,10 +314,7 @@ bool check_obl_a(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal
 	{
 		return Is_obl_win_a(point_chess, ptrchesses, chess_width, 1);
 	}
-	if (myturn == false)
-	{
-		return Is_obl_win_a(point_chess, ptrchesses, chess_width, 2);
-	}
+	return Is_obl_win_a(point_chess, ptrchesses, chess_width, 2);
 }
 bool Is_obl_win_a(QPointF& point_chess, map<QPointF, int, cmp>*&ptrchesses, qreal& chess_width, int i)
 {

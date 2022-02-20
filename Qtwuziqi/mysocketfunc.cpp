@@ -1,3 +1,4 @@
+#pragma comment(lib, "Ws2_32.lib")
 #include "mysocketfunc.h"
 void ErrorHandling(string&s)
 {

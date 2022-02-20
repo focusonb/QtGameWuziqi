@@ -7,7 +7,7 @@
 #include "myfunction.h"
 #include "IswinThread.h"
 //#include "SocketThread.h"
-extern class SocketThread;
+class SocketThread;
 using namespace std;
 class GameWidget :
 	public QMainWindow

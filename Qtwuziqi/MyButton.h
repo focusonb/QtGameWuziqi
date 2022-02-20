@@ -9,12 +9,12 @@ public:
 		setText("I am a button");
 	}
 private:
-	void enterEvent(QEvent* e) override
+    void enterEvent(QEvent* e)
 	{
 		setStyleSheet("QPushButton{background: yellow;}");
 		
 	}
-	void MyButton::leaveEvent(QEvent* e)
+	void leaveEvent(QEvent* e)
 	{
 		setStyleSheet("QPushButton{background: white;}");
 	}
