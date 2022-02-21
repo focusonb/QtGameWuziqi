@@ -7,4 +7,4 @@
 dynamic libraries our Qt program needs while it is running.  
 
   3.Compile source files. It is worth noting that maybe the expression of including header files in the files which your user interface
-compiler automaticaly output is '#include "MyButton.h"',try changng it to '#include <MyButton.h>' if you encounter fails in compilation.
+compiler automaticaly output is '#include <MyButton.h>',try changng it to '#include "MyButton.h"' if you encounter fails in compilation.
