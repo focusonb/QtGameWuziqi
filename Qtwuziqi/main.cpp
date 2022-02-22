@@ -10,10 +10,12 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	QSemaphore semaone(1) ;
+	QSemaphore semaone(2) ;
+
 	QSemaphore sematwo ;
 	QSemaphore semathree;
 	QtGame w(semaone,sematwo, semathree);
+
 	w.show();
 	return a.exec();
 }

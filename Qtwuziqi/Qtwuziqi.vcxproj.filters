@@ -38,6 +38,12 @@
     <ClInclude Include="mysocketfunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ChessBoardViewControler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMapChess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="game_graphics_view.ui">
@@ -70,6 +76,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SocketThread.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessBoardViewControler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelMapChess.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

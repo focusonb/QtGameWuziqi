@@ -6,8 +6,10 @@
 #include <map>
 #include "myfunction.h"
 #include "IswinThread.h"
+
 //#include "SocketThread.h"
 class SocketThread;
+class BoardViewControler;
 using namespace std;
 class GameWidget :
 	public QMainWindow
@@ -17,6 +19,10 @@ class GameWidget :
 public:
 	GameWidget(QMainWindow*parent=NULL);
 	GameWidget(QSemaphore& semaone, QSemaphore& sematwo, QSemaphore& semathree);
+	QSemaphore* getQSemaphoreOne();
+	QSemaphore* getQSemaphoreTwo();
+	bool* getMyturn();
+	bool* getGamegoingon();
 	~GameWidget();
 signals:
 	void gameover();
@@ -38,22 +44,26 @@ private:
 	
 	Ui::MainWindow ui;
 	QGraphicsScene* scene;
-	QGraphicsRectItem* rect;
-	bool myturn = true;
-	qreal width_chess;
-	qreal height_chess;
-	map<QPointF, int, cmp>* chesses;
-	bool gamegoingon = true;
+	//QGraphicsRectItem* rect;
+	
+	//qreal width_chess;
+	//qreal height_chess;
+	//map<QPointF, int, cmp>* chesses;
+	
 	Threadarg_iswin arg_iswin;
 	QPointF achess;
 	QSemaphore* sematwo;
-	QSemaphore* semaone;
-	QSemaphore* semathree;
+	QSemaphore* semaone;            
+	QSemaphore* semathree; 
 	IswinThread* iswinThread;
 	SocketThread* socketThread;
-	GameWidget* ptrgamewidget;
+
+	bool gamegoingon = true;
+	bool myturn = true;
 	bool mypart=false;
 	bool is_matched=false;
+
+	BoardViewControler* viewControler;
 };
 
 

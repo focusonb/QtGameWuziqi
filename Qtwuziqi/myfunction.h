@@ -64,8 +64,8 @@ struct Threadarg_iswin
 };
 
 
-void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess, MapPoint*&ptrchesses);
-void drawachess(bool&myturn, QPointF& point_chess, QGraphicsScene*scene, qreal& chess_width, MapPoint*&ptrchesses,
+void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess, map<QPointF,int,cmp>* ptrchesses);
+void drawachess(bool&myturn, QPointF& point_chess, QGraphicsScene*scene, qreal& chess_width, map<QPointF,int,cmp>* ptrchesses,
 	bool& gamegoingon, QSemaphore* sematwo, QSemaphore* semaone);
 QRectF  qpointtoqrectf(QPointF& point_chess, qreal& chess_width);
 void pointstd(QPointF& point_chess,qreal& chess_width);

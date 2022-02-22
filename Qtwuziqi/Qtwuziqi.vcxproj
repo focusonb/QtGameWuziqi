@@ -86,8 +86,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ChessBoardViewControler.h" />
     <ClInclude Include="DataStruct.h" />
     <ClInclude Include="func_thread.h" />
+    <ClInclude Include="ModelMapChess.h" />
     <ClInclude Include="MyButton.h" />
     <ClInclude Include="myfunction.h" />
     <ClInclude Include="mysocketfunc.h" />
@@ -101,9 +103,11 @@
     <QtUic Include="QtGame.ui" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChessBoardViewControler.cpp" />
     <ClCompile Include="GameWidget.cpp" />
     <ClCompile Include="IswinThread.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelMapChess.cpp" />
     <ClCompile Include="MyButton.cpp" />
     <ClCompile Include="myfunction.cpp" />
     <ClCompile Include="mysocketfunc.cpp" />

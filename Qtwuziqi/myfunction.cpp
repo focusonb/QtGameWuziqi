@@ -6,7 +6,7 @@
 //#include <QGraphicsScene>
 //#include "GameWidget.h"
 class GameWidget;
-void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess ,map<QPointF, int, cmp>*&ptrchesses)
+void makeBoard(QGraphicsView* graphicsView, QGraphicsScene*scene, qreal& witdth_chess, qreal& height_chess, map<QPointF,int,cmp>* ptrchesses)
 {
 	QBrush greenBrush(Qt::green);
 	QPen  blackPen(Qt::black);
@@ -55,8 +55,7 @@ QRectF  qpointtoqrectf(QPointF& point_chess,qreal& chess_width)
 	QPointF bottomRight(point_chess.rx() +chess_width * 0.4, point_chess.ry() +chess_width * 0.4);
 	return QRectF(topLeft, bottomRight);
 }
-void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& chess_width,map<QPointF, int,
-	cmp>*&ptrchesses, bool& gamegoingon, QSemaphore* sematwo, QSemaphore* semaone)
+void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene* scene, qreal& chess_width, map<QPointF,int,cmp>* ptrchesses, bool& gamegoingon, QSemaphore* sematwo, QSemaphore* semaone)
 {
 	pointstd(point_chess, chess_width);
 
@@ -80,12 +79,6 @@ void drawachess(bool&myturn,QPointF& point_chess, QGraphicsScene*scene, qreal& c
 
 		scene->addEllipse(rect, pen, brush);
 		ptrchesses->at(point_chess) = 1;
-		//if (is_win(point_chess, ptrchesses, chess_width, myturn,gamegoingon))
-		//{
-		//	QMessageBox message(QMessageBox::Warning, "Information", "YOU WIN!", QMessageBox::Yes, NULL);
-		//	message.exec();
-		//}
-		//QReleaseSemaphore(*sematwo, 1, NULL);
 		sematwo->release();
 		//scene->addEllipse(QRectF(QPointF(-18.75, -18.75), QPointF(18.75, 18.75)), pen, brush);
 		//scene->addEllipse(QRectF(QPointF(-chess_width /2, chess_width / 2), QPointF(chess_width / 2, -chess_width / 2)), pen, brush);

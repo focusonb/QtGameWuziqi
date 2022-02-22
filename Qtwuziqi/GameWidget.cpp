@@ -2,28 +2,37 @@
 #include "GameWidget.h"
 #include "myfunction.h"
 #include <qmessagebox.h>
+#include "ChessBoardViewControler.h"
+#include "ModelMapChess.h"
 
 extern void sendachesss(string& s);
-GameWidget::GameWidget(QMainWindow*parent):chesses(new map<QPointF, int, cmp>())
+GameWidget::GameWidget(QMainWindow*parent)
 {
 	ui.setupUi(this);
-	scene = new QGraphicsScene(this);
-	ui.graphicsView->setScene(scene);
+	//scene = new QGraphicsScene(this);
+	//ui.graphicsView->setScene(scene);
 	//map<QPointF, int, cmp>* ptrchesse;
-	makeBoard(ui.graphicsView,scene, width_chess, height_chess, chesses);
+	//makeBoard(ui.graphicsView,scene, width_chess, height_chess, chesses);
+	viewControler = new ChessBoardViewControler(15);
+	viewControler->build(ui.graphicsView, this);
 	iswinThread = new IswinThread(getdata());
 	iswinThread->start();
 	connect(this, &GameWidget::gameover, this, &GameWidget::gameover_message);
 }
-GameWidget::GameWidget(QSemaphore& s, QSemaphore& sematwo, QSemaphore& semathree) :chesses(new map<QPointF, int, cmp>()),
-sematwo (&sematwo),semathree(&semathree)
+GameWidget::GameWidget(QSemaphore& s, QSemaphore& sematwo, QSemaphore& semathree) :
+	semaone(&s), sematwo (&sematwo),semathree(&semathree)
 {
 	ui.setupUi(this);
-	scene = new QGraphicsScene(this);
-	ui.graphicsView->setScene(scene);
+	//scene = new QGraphicsScene(this);
+	//ui.graphicsView->setScene(scene);
 	//map<QPointF, int, cmp>* ptrchesse;
-	makeBoard(ui.graphicsView, scene, width_chess, height_chess, chesses);
-	semaone = &s;
+	//makeBoard(ui.graphicsView, scene, width_chess, height_chess, chesses);
+
+	viewControler = new ChessBoardViewControler(15);
+	viewControler->build(ui.graphicsView, this);
+
+
+
 	iswinThread = new IswinThread(getdata());
 	iswinThread->start();
 	socketThread = new SocketThread(getdata());
@@ -38,6 +47,22 @@ sematwo (&sematwo),semathree(&semathree)
 	);
 	connect(this, SIGNAL(getaplayer()), socketThread, SLOT(gamestart()));
 	connect(socketThread, SIGNAL(successmatch()), this, SLOT(match_message()));
+}
+QSemaphore * GameWidget::getQSemaphoreOne()
+{
+	return semaone;
+}
+QSemaphore * GameWidget::getQSemaphoreTwo()
+{
+	return sematwo;
+}
+bool* GameWidget::getMyturn()
+{
+	return &myturn;
+}
+bool * GameWidget::getGamegoingon()
+{
+	return &gamegoingon;
 }
 void GameWidget::gameclose()
 {
@@ -66,13 +91,15 @@ void GameWidget::mousePressEvent(QMouseEvent*e)
 	achess = ui.graphicsView->mapToScene(pointview);
 	string message_toopponent(std::to_string(achess.rx()) + 'a' + std::to_string(achess.ry()));
 	socketThread->sendachesss(message_toopponent,socketThread->getsocket());
-	drawachess(myturn, achess,scene,width_chess, chesses,gamegoingon,sematwo,semaone);
+	//drawachess(myturn, achess,scene,width_chess, chesses,gamegoingon,sematwo,semaone);
+	viewControler->drawOneChess(achess, this);
+
 }
 Threadarg_iswin* GameWidget::getdata()
 {
 	arg_iswin.point_chess = &achess;
-	arg_iswin.ptrchesses = &chesses;
-	arg_iswin.chess_width = &width_chess;
+	arg_iswin.ptrchesses = viewControler->getModelChess()->getMapPointAdr();
+	arg_iswin.chess_width = viewControler->getChessWidth();
 	arg_iswin.myturn = &myturn;
 	arg_iswin.gamegoingon = &gamegoingon;
 	arg_iswin.sematwo = sematwo;
@@ -100,8 +127,9 @@ GameWidget::~GameWidget()
 //}
 void GameWidget::draw()
 {
-	
-	drawachess(myturn, achess, scene, width_chess, chesses, gamegoingon, sematwo, semaone);
+
+	//drawachess(myturn, achess, scene, width_chess, chesses, gamegoingon, sematwo, semaone);
+	viewControler->drawOneChess(achess, this);
 	return;
 }
 void GameWidget::matchplayer()
