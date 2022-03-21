@@ -4,6 +4,8 @@
 #include <qmessagebox.h>
 #include "ChessBoardViewControler.h"
 #include "ModelMapChess.h"
+#include "socketManager/socketManager.h"
+#include "socketManager/socketMediator.h"
 
 extern void sendachesss(string& s);
 GameWidget::GameWidget(QMainWindow*parent)
@@ -35,7 +37,8 @@ GameWidget::GameWidget(QSemaphore& s, QSemaphore& sematwo, QSemaphore& semathree
 
 	iswinThread = new IswinThread(getdata());
 	iswinThread->start();
-	socketThread = new SocketThread(getdata());
+	SocketMediator* socketMediator = new SocketMediatorToArg(this, getdata());
+	socketThread = new SocketThread(socketMediator);
 	socketThread->start();
 	connect(iswinThread, SIGNAL(gameover()), this, SLOT(gameover_message()));
 	connect(this, &GameWidget::gameover, this, &GameWidget::gameover_message);
